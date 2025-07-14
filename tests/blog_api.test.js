@@ -32,7 +32,7 @@ describe('when there is initially some blogs saved', () => {
     token = loginResponse.body.token
 
     // Create initial blogs with authentication
-    for (let blog of helper.initialBlogs) {
+    for (const blog of helper.initialBlogs) {
       await api
         .post('/api/blogs')
         .set('Authorization', `Bearer ${token}`)
@@ -47,50 +47,49 @@ describe('when there is initially some blogs saved', () => {
       .expect(200)
       .expect('Content-Type', /application\/json/)
   })
-.
 
-  describe('addition of a new blog', () => {
-    test('succeeds with valid data and token', async () => {
-      const newBlog = {
-        title: 'Test Blog',
-        author: 'Test Author',
-        url: 'http://test.com',
-        likes: 5
-      }
+    .describe('addition of a new blog', () => {
+      test('succeeds with valid data and token', async () => {
+        const newBlog = {
+          title: 'Test Blog',
+          author: 'Test Author',
+          url: 'http://test.com',
+          likes: 5
+        }
 
-      await api
-        .post('/api/blogs')
-        .set('Authorization', `Bearer ${token}`)
-        .send(newBlog)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
+        await api
+          .post('/api/blogs')
+          .set('Authorization', `Bearer ${token}`)
+          .send(newBlog)
+          .expect(201)
+          .expect('Content-Type', /application\/json/)
 
-      const blogsAtEnd = await helper.blogsInDb()
-      assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
-      
-      const titles = blogsAtEnd.map(blog => blog.title)
-      assert.ok(titles.includes('Test Blog'))
+        const blogsAtEnd = await helper.blogsInDb()
+        assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+
+        const titles = blogsAtEnd.map(blog => blog.title)
+        assert.ok(titles.includes('Test Blog'))
+      })
+
+      test('fails with status code 401 if token not provided', async () => {
+        const newBlog = {
+          title: 'Test Blog',
+          author: 'Test Author',
+          url: 'http://test.com',
+          likes: 5
+        }
+
+        await api
+          .post('/api/blogs')
+          .send(newBlog)
+          .expect(401)
+
+        const blogsAtEnd = await helper.blogsInDb()
+        assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+      })
+
+      // ... other validation tests remain the same ...
     })
-
-    test('fails with status code 401 if token not provided', async () => {
-      const newBlog = {
-        title: 'Test Blog',
-        author: 'Test Author',
-        url: 'http://test.com',
-        likes: 5
-      }
-
-      await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(401)
-
-      const blogsAtEnd = await helper.blogsInDb()
-      assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
-    })
-
-    // ... other validation tests remain the same ...
-  })
 
   describe('deletion of a blog', () => {
     test('succeeds with status code 204 if id is valid and user is authorized', async () => {
@@ -121,9 +120,9 @@ describe('when there is initially some blogs saved', () => {
       const blogsAtStart = await helper.blogsInDb()
       const blogToUpdate = blogsAtStart[0]
 
-      const updatedData = { 
-        ...blogToUpdate, 
-        likes: blogToUpdate.likes + 1 
+      const updatedData = {
+        ...blogToUpdate,
+        likes: blogToUpdate.likes + 1
       }
 
       const response = await api

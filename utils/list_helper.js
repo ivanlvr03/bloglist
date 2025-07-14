@@ -10,7 +10,7 @@ const totalLikes = (blogs) => {
 
 const favoriteBlog = (blogs) => {
   if (blogs.length === 0) return null
-  
+
   const favorite = blogs.reduce((prev, current) => {
     return current.likes > prev.likes ? current : prev
   })
@@ -23,15 +23,15 @@ const favoriteBlog = (blogs) => {
 }
 
 const mostBlogs = (blogs) => {
-if (blogs.length === 0) return null
+  if (blogs.length === 0) return null
   const authorCount = _.countBy(blogs, 'author')
   const pairs = _.toPairs(authorCount)
-  const [author, blogsCount] = _.maxBy(pairs,([, count]) => count) 
+  const [author, blogsCount] = _.maxBy(pairs, ([, count]) => count)
 
   return {
-    author: author,
+    author,
     blogs: blogsCount
-}
+  }
 }
 
 const mostLikes = (blogs) => {
@@ -41,16 +41,15 @@ const mostLikes = (blogs) => {
   const [author, likes] = _.maxBy(_.toPairs(likesCount), ([, count]) => count)
 
   return {
-    author: author,
-    likes: likes
-    }
+    author,
+    likes
+  }
 }
 
-
 module.exports = {
-    totalLikes,
-    dummy,
-    favoriteBlog,
-    mostBlogs,
-    mostLikes
+  totalLikes,
+  dummy,
+  favoriteBlog,
+  mostBlogs,
+  mostLikes
 }
